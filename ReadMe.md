@@ -36,5 +36,8 @@ Laravel is accessible, powerful, and provides tools required for large, robust a
 - **Push. Command ' git push -u origin namaBranchAnda ' . bertujuan untuk melakukan push ke repository**
 ### Selesai
 
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Cara Jalanin nya
+### 1. Folder Service_Authentication. Database nya ganti apa aja. Jangan sama dengan yang lain. Jalanin Server nya php artisan serve --port=1234
+### 2. Folder Service_Product. Database nya ganti apa aja. Jangan sama dengan Service_Authentication. Jalanin Servernya php artisan serve --port=5678
+### 4. Folder Consume-Ui-Service. Databasenya ganti apa aja. Jangan sama dengan Service_Authentication dan Service_Product. Jalanin Servernya php artisan serve --port=8000
+### 5. Buka link tersebut. Selesai
