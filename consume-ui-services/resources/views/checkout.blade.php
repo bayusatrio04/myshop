@@ -12,15 +12,15 @@
     <div class="col-12">
         <div class="section-title">
             <h2>Checkout Form</h2>
-           
+
         </div>
     </div>
 </div>
 @foreach ($transactions as $transaction)
 <div class="row g-5">
-    
+
     <div class="col-md-5 col-lg-4 order-md-last">
-        
+
       <h4 class="d-flex justify-content-between align-items-center mb-3">
         <span class="text-primary">Your cart</span>
         <span class="badge bg-primary rounded-pill">{{ $count }}</span>
@@ -36,6 +36,21 @@
           </div>
           <span class="text-muted">Rp. {{ number_format($transaction->total_price, 0, ',', '.') }}</span>
         </li>
+        <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">Status Pemesanan</h6>
+              <small class="text-muted">
+
+            </small>
+            </div>
+            <span class="text-muted">
+                @if($transaction->status == "Pending")
+                <td><span class="badge text-bg-danger">{{ $transaction->status }}</span></td>
+                @else
+                <td><span class="badge text-bg-success">{{ $transaction->status }}</span></td>
+                @endif
+            </span>
+          </li>
         <li class="list-group-item d-flex justify-content-between">
           <strong>Total Pembayaran(Rupiah)</strong>
           <strong>Rp. {{ number_format($transaction->total_price, 0, ',', '.') }}</strong>
@@ -43,11 +58,12 @@
       </ul>
 
     </div>
-    
-    
+
+
 
 
     <div class="col-md-7 col-lg-8">
+        <a href="{{ url('/cart') }}" class="btn btn-dark mb-3 mt-3">Back</a>
       <h4 class="mb-3">Billing Transaction ID <strong>#{{ $transaction->id }}</strong></h4>
       <form action="{{ route('checkout.store', $transaction->id) }}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate="">
         @csrf
@@ -60,23 +76,63 @@
             </div>
           </div>
 
-       
+
 
           <div class="col-12">
             <label for="email" class="form-label">Email <span class="text-muted">(Optional)</span></label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="{{ $transaction->user_email }}" readonly  >
+            <input type="email" class="form-control" id="email" name="email" placeholder="" value="{{ $transaction->user_email }}" readonly  >
             <div class="invalid-feedback">
               Please enter a valid email address for shipping updates.
             </div>
           </div>
-
-          <div class="col-12">
-            <label for="address" class="form-label">Address</label>
-            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="">
-            <div class="invalid-feedback">
-              Please enter your shipping address.
+          @if($transaction->status == "Completed")
+            <div class="col-12">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" name="address" value="{{ $transaction->address }}" readonly>
+                    <div class="invalid-feedback">
+                    Please enter your shipping address.
+                    </div>
             </div>
-          </div>
+            <div class="col-12">
+                <label for="kotaasal" class="form-label">Kota Asal</label>
+                <input type="text" class="form-control" id="kotaasal" name="kotaasal" value="{{ $transaction->kotaasal }}" readonly>
+                    <div class="invalid-feedback">
+                    Please enter your shipping address.
+                    </div>
+            </div>
+            <div class="col-12">
+                <label for="kotatujuan" class="form-label">Kota Tujuan</label>
+                <input type="text" class="form-control" id="kotatujuan" name="kotatujuan" value="{{ $transaction->kotatujuan }}" readonly>
+                    <div class="invalid-feedback">
+                    Please enter your shipping address.
+                    </div>
+            </div>
+            <div class="col-12">
+                <label for="weight" class="form-label">Berat Product</label>
+                <input type="text" class="form-control" id="weight" name="weight" value="{{ $transaction->weight }}" readonly>
+                    <div class="invalid-feedback">
+                    Please enter your shipping address.
+                    </div>
+            </div>
+            <div class="col-12">
+                <label for="courier" class="form-label">Jasa Pengiriman</label>
+                <input type="text" class="form-control" id="courier" name="courier" value="{{ $transaction->courier }}" readonly>
+                    <div class="invalid-feedback">
+                    Please enter your shipping address.
+                    </div>
+            </div>
+            <div class="col-12">
+                <label for="paymentMethod" class="form-label">Payment Method</label>
+                <p>{{ $transaction->paymentMethod }}</p>
+            </div>
+          @else
+            <div class="col-12">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" name="address" placeholder="1234 Main St" required="">
+                <div class="invalid-feedback">
+                Please enter your shipping address.
+                </div>
+            </div>
 
 
 
@@ -121,11 +177,6 @@
           </div>
 
 
-        <hr class="my-4">
-
-          <p>Total Biaya Jasa Kirim :Rp. ini_total_nya</p>
-          <p>Total Pemesanan Barang : Rp. ini_total_pemesenan_barang</p>
-          <p>Total Yang Harus anda bayar :Rp. ini_total_yang_harus_anda_bayar</p>
 
         <hr class="my-4">
 
@@ -133,29 +184,30 @@
 
         <div class="my-3">
           <div class="form-check">
-            <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked="" required="">
-            <label class="form-check-label" for="credit">OVO</label>
+            <input id="credit" name="paymentMethod" value="OVO" type="radio" class="form-check-input" checked="" required="">
+            <label class="form-check-label"  for="credit">OVO</label>
           </div>
           <div class="form-check">
-            <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required="">
+            <input id="debit" name="paymentMethod"  value="GOPAY" type="radio" class="form-check-input" required="">
             <label class="form-check-label" for="debit">GOPAY</label>
           </div>
           <div class="form-check">
-            <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required="">
+            <input id="paypal" name="paymentMethod" value="LINK AJA" type="radio" class="form-check-input" required="">
             <label class="form-check-label" for="paypal">LINK AJA</label>
           </div>
         </div>
 
-    
+
         <hr class="my-4">
 
         <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
       </form>
-      
+      @endif
+
     </div>
   </div>
   @endforeach
-  
+
     <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/tiny-slider.js') }}"></script>
     <script src="{{ asset('assets/js/glightbox.min.js') }}"></script>
@@ -164,7 +216,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script type="text/javascript">
-        //========= Hero Slider 
+        //========= Hero Slider
         tns({
             container: '.hero-slider',
             slideBy: 'page',

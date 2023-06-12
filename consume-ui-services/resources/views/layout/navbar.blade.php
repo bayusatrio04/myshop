@@ -33,8 +33,8 @@
                       $password = session('password');
                     @endphp
                     <div class="user d-flex align-baseline ms-auto gap-3">
-                      
-                      <span class="ms-auto mt-2"><i class="lni lni-user"></i> Hello, {{ $name }}</span> 
+
+                      <span class="ms-auto mt-2"><i class="lni lni-user"></i> Hello, {{ $name }}</span>
                       <form action="{{ route('logout') }}" method="post">
                         @csrf
                         <button type="submit" class="btn btn-dark text-primary gap-3">Logout</button>
@@ -98,56 +98,64 @@
               <div class="col-lg-4 col-md-2 col-5">
                   <div class="middle-right-area">
                       <div class="nav-hotline">
-        
+
                       </div>
+                      @php
+                      $cart = session('transactions');
+                      $items = session('items');
+                      @endphp
+
                       <div class="navbar-cart d-flex right-0 justify-content-end align-items-end ">
                           <div class="cart-items text-danger">
                               <a href="javascript:void(0)" class="main-btn">
                                   <i class="lni lni-cart mt-2"></i>
-                                  <span class="total-items bg-danger">0</span>
+                                  <span class="total-items bg-danger">{{ $cart[1] }}</span>
                               </a>
                               <!-- Shopping Item -->
                               <div class="shopping-item">
                                   <div class="dropdown-cart-header">
-                                      <span>2 Items</span>
+                                      <span>{{ $cart[1] }} Items</span>
                                       <a href="{{ url('/cart') }}">View Cart</a>
                                   </div>
                                   <ul class="shopping-list">
-                                      <li>
-                                          <a href="javascript:void(0)" class="remove" title="Remove this item"><i
-                                                  class="lni lni-close"></i></a>
-                                          <div class="cart-img-head">
-                                              <a class="cart-img" href="product-details.html"><img
-                                                      src="assets/images/header/cart-items/item1.jpg" alt="#"></a>
-                                          </div>
+                                    @if($cart)
+                                    @foreach($cart[0] as $item)
 
-                                          <div class="content">
-                                              <h4><a href="product-details.html">
-                                                      Apple Watch Series 6</a></h4>
-                                              <p class="quantity">1x - <span class="amount">$99.00</span></p>
-                                          </div>
-                                      </li>
-                                      <li>
-                                          <a href="javascript:void(0)" class="remove" title="Remove this item"><i
-                                                  class="lni lni-close"></i></a>
-                                          <div class="cart-img-head">
-                                              <a class="cart-img" href="product-details.html"><img
-                                                      src="assets/images/header/cart-items/item2.jpg" alt="#"></a>
-                                          </div>
-                                          <div class="content">
-                                              <h4><a href="product-details.html">Wi-Fi Smart Camera</a></h4>
-                                              <p class="quantity">1x - <span class="amount">$35.00</span></p>
-                                          </div>
-                                      </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="remove" title="Remove this item"><i class="lni lni-close"></i></a>
+                                            <div class="cart-img-head">
+                                                <a class="cart-img" href="product-details.html"><img src="{{ $item->photo }}" alt="#"></a>
+                                            </div>
+                                            <div class="content">
+                                                <h4><a href="product-details.html">{{ $item->product_name }}</a></h4>
+                                                <p class="quantity">{{ $item->quantity }} x - <span class="amount">Rp.{{ number_format($item->total_price, 0, ',', '.') }}</span></p>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                @endif
                                   </ul>
+
                                   <div class="bottom">
                                       <div class="total">
                                           <span>Total</span>
-                                          <span class="total-amount">$134.00</span>
+                                          @php
+                                                $totalPrice = 0;
+                                                foreach ($cart[0] as $item) {
+                                                    $totalPrice += $item->total_price;
+                                                }
+                                            @endphp
+                                          <span class="total-amount">Rp.{{ number_format($totalPrice, 0, ',', '.') }}</span>
                                       </div>
+
+                                      @forelse ($cart[0] as $item)
                                       <div class="button">
-                                          <a href="checkout.html" class="btn animate">Checkout</a>
+                                        <a href="{{ route('checkout.all') }}" class="btn animate">Checkout</a>
                                       </div>
+                                      @empty
+                                      <p>Tidak ada Transaksi</p>
+                                      @endforelse
+
+
                                   </div>
                               </div>
                               <!--/ End Shopping Item -->
@@ -158,6 +166,8 @@
           </div>
       </div>
   </div>
+
+
   <!-- End Header Middle -->
   <!-- Start Header Bottom -->
   <div class="container">
@@ -165,12 +175,12 @@
           <div class="col-lg-8 col-md-6 col-12">
               <div class="nav-inner">
                   <!-- Start Mega Category Menu -->
-                  
+
                   <!-- End Mega Category Menu -->
 
               </div>
           </div>
-          
+
           </div>
       </div>
   </div>
@@ -179,16 +189,16 @@
 
 <script>
   // Cek keberadaan access_token
-  var access_token = localStorage.getItem('access_token'); 
-  
+  var access_token = localStorage.getItem('access_token');
+
   if (access_token) {
-   
-    document.getElementById('loginButton').style.display = 'none'; 
-    document.getElementById('registerButton').style.display = 'none'; 
+
+    document.getElementById('loginButton').style.display = 'none';
+    document.getElementById('registerButton').style.display = 'none';
   } else {
 
-    document.getElementById('loginButton').style.display = 'block'; 
-    document.getElementById('registerButton').style.display = 'block'; 
+    document.getElementById('loginButton').style.display = 'block';
+    document.getElementById('registerButton').style.display = 'block';
   }
 </script>
 
@@ -197,7 +207,7 @@
 <script src="{{ asset('assets/js/glightbox.min.js') }}"></script>
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <script type="text/javascript">
-    //========= Hero Slider 
+    //========= Hero Slider
     tns({
         container: '.hero-slider',
         slideBy: 'page',

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigInteger('id_product');
             $table->bigInteger('id_categories');
             $table->integer('quantity');
+            $table->string('status')->default('Pending');
             $table->integer('total_price');
             $table->timestamps();
         });

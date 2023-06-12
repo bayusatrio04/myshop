@@ -27,7 +27,7 @@
             </div> <!-- navbar collapse -->
         </nav>
         <!-- End Navbar -->
-   
+
         <div class="row mt-5">
             <div class="col-12">
                 <div class="section-title">
@@ -44,6 +44,10 @@ and if you want to buy other items then click the item order button
                 {{ session('pesanan') }}
             </div>
         @endif
+        <div class="d-flex justify-content-end align-items-end">
+
+            <a href="{{ route('checkout.all') }}" class="btn btn-primary mt-3 mb-3">Checkout All Cart</a>
+        </div>
         @forelse($transactions as $cart)
         <table class="table table-bordered">
             <thead>
@@ -56,12 +60,13 @@ and if you want to buy other items then click the item order button
                     <th scope="col">PHOTO PRODUCT</th>
                     <th scope="col">CATEGORIES NAME</th>
                     <th scope="col">QUANTITY</th>
+                    <th scope="col">STATUS TRANSAKSI</th>
                     <th scope="col">TOTAL PRICE</th>
                     <th scope="col">ACTION</th>
                 </tr>
             </thead>
             <tbody>
-                
+
                 <tr>
                     <th scope="row">{{ $cart->id }}</th>
                     <td>{{ $cart->id_user }}</td>
@@ -73,18 +78,28 @@ and if you want to buy other items then click the item order button
                     </td>
                     <td>{{ $cart->category_name }}</td>
                     <td>{{ $cart->quantity }}</td>
+                    @if($cart->status == "Pending")
+                    <td><span class="badge text-bg-danger">{{ $cart->status }}</span></td>
+                    @else
+                    <td><span class="badge text-bg-success">{{ $cart->status }}</span></td>
+                    @endif
                     <td>Rp{{ number_format($cart->total_price, 0, ',', '.') }}</td>
                     <td>
+                        @if($cart->status =="Pending")
                         <a href="{{ route('checkout.produk', ['id' => $cart['id']]) }}" class="btn btn-primary">Checkout</a>
                         <a href="" class="btn btn-danger mt-3">Cancel</a>
+                        @elseif($cart->status="Completed")
+                        <a href="{{ route('checkout.produk', ['id' => $cart['id']]) }}" class="btn btn-success">Detail</a>
+                        @endif
                     </td>
-   
+
                     @empty
                     <td>Data Transaksi Belum ada.</td>
                 </tr>
-               
+
             </tbody>
         </table>
+
         @endforelse
 
 

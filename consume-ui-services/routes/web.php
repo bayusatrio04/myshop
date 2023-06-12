@@ -22,7 +22,7 @@ use App\Models\User;
 
 Route::get('/', function () {
     // Mengambil detail produk dengan ID 14 dari API server
-    $response = Http::get('http://localhost:8000/api/products/14');
+    $response = Http::get('http://localhost:8000/api/products/8');
 
     if ($response->status() === 200) {
         $product = $response->json();
@@ -30,21 +30,23 @@ Route::get('/', function () {
         if (isset($product['photo'])) {
             $photo = $product['photo'];
         } else {
-            // Jika tidak ada atribut gambar yang sesuai, berikan nilai default
+
             $photo = 'default.jpg';
         }
 
-        // Mengirim data foto ke view welcome
         return view('welcome', ['photo' => $photo]);
     }
 
-    // Jika gagal mengambil data dari API, tampilkan halaman welcome tanpa foto
-    return view('welcome');
-})->middleware('guest');
+
+    return view('welcome',);
+
+    })->middleware('guest');
+
 
 Route::get('/login', function () {
     return view('login');
 });
+
 
 
 
@@ -86,20 +88,20 @@ Route::middleware('auth:sanctum')->group(function () {
 // Route::post('/login', function () {
     //     $email = request()->input('email');
     //     $password = request()->input('password');
-    
+
     //     $response = Http::post('http://localhost:7000/api/login', [
         //         'email' => $email,
         //         'password' => $password,
         //     ]);
-        
+
         //     if ($response->successful()) {
             //         request()->session()->regenerate();
             //         $accessToken = $response->json()['access_token'];
-            
+
             //         // Simpan access token di cookie atau local storage, misalnya
             //         // Set cookie
             //         return redirect()->intended('/')->cookie('access_token', $accessToken)->with('access_token', $accessToken);
-            
+
             //         // Set local storage
             //         // return redirect('/')->with('access_token', $accessToken);
             //     } else {
@@ -114,9 +116,9 @@ Route::middleware('auth:sanctum')->group(function () {
         //         'email' => 'user2@example.com',
         //         'password' => '123456'
         //     ]);
-        
+
         //     $responseData = $response->json();
-        
+
         //     if (isset($responseData['access_token'])) {
             //         return redirect('/')->with('access_token', $responseData['access_token']);
             //     } else {
@@ -129,23 +131,23 @@ Route::middleware('auth:sanctum')->group(function () {
                         //         'email' => 'user2@example.com',
                         //         'password' => '123456'
                         //     ]);
-                        
+
                         //     return $response->json();
                         // });
-                        
-                        
+
+
                         // Route::post('/logout', function () {
                             //     $accessToken = request()->cookie('access_token');
-                            
+
                             //     $response = Http::withHeaders([
                                 //         'Authorization' => 'Bearer ' . $accessToken,
                                 //     ])->post('http://localhost:7000/api/logout');
-                                
+
                                 //     if ($response->successful()) {
                                     //         // Hapus access token dari cookie atau local storage, misalnya
                                     //         // Hapus cookie
                                     //         return response()->json(['message' => 'You have been logged out successfully'])->cookie('access_token', '', 0);
-                                    
+
                                     //         // Hapus local storage
                                     //         // return response()->json(['message' => 'You have been logged out successfully'])->withCookie(cookie()->forget('access_token'));
                                     //     } else {
@@ -163,13 +165,21 @@ Route::get('/products/images/{filename}', [ProductController::class, 'downloadPr
 
 use App\Http\Controllers\PesanProdukController;
 use App\Http\Controllers\RajaOngkirController;
+use App\Http\Controllers\CheckoutController;
 
 Route::post('/pesan_produk/{id}', [PesanProdukController::class, 'pesanProduk'])->name('pesan.produk');
 
 Route::get('/cart', [PesanProdukController::class, 'cart'])->name('cart.produk');
-Route::get('/checkout/{id}', [PesanProdukController::class, 'checkout'])->name('checkout.produk');
-Route::post('/checkout/{id}', [PesanProdukController::class, 'checkout_store'])->name('checkout.store');
-Route::get('/checkout/success', [PesanProdukController::class, 'checkoutSuccess'])->name('checkout.success');
+
+
+Route::get('/checkout/success', [CheckoutController::class, 'checkoutSuccess'])->name('checkout.success');
+//Checkout satu aja
+Route::get('/checkout/{id}', [CheckoutController::class, 'checkout'])->name('checkout.produk');
+Route::post('/checkout/{id}', [CheckoutController::class, 'store'])->name('checkout.store');
+
+//Checkout All
+Route::get('/checkout/all/transaction', [CheckoutController::class, 'checkoutAll'])->name('checkout.all');
+
 
 
 Route::get('/check', [RajaOngkirController::class, 'check'])->name('check.ongkir');

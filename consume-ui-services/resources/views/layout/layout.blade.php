@@ -8,6 +8,7 @@
   </head>
   <body>
     @include('layout.navbar')
+
     @if(session('access_token'))
       <div class="d-flex justify-content-center align-items-center " hidden>
         <button class="btn btn-primary opacity-0">
@@ -24,7 +25,7 @@
           <p>Name: {{ isset(session('success')['name']) }}</p>
           <p>Email: {{ isset(session('success')['email']) }}</p>
         </div>
- 
+
 
     @endif
 

@@ -34,7 +34,7 @@
     </div> <!-- navbar collapse -->
   </nav>
 <!-- End Navbar -->
-   
+
 
             <!-- Start Trending Product Area -->
             <section class="trending-product section" style="margin-top: 12px;">
@@ -57,7 +57,7 @@
                     <div class="row">
                         @foreach ($products['data'] as $product)
                         <div class="col-lg-3 col-md-6 col-12">
-                            
+
                             <!-- Start Single Product -->
                             <div class="single-product ">
                                 <div class="product-image">
@@ -68,7 +68,7 @@
                                     </div>
                                 </div>
                                 <div class="product-info product-foto">
-   
+
                                     <span class="category">{{ $categoryData }}</span>
 
                                     <h4 class="title">
@@ -88,10 +88,10 @@
                                 </div>
                             </div>
                             <!-- End Single Product -->
-                            
+
                         </div>
                         @endforeach
-                        
+
                     </div>
                 </div>
             </section>
@@ -101,7 +101,7 @@
         <script src="{{ asset('assets/js/glightbox.min.js') }}"></script>
         <script src="{{ asset('assets/js/main.js') }}"></script>
         <script type="text/javascript">
-            //========= Hero Slider 
+            //========= Hero Slider
             tns({
                 container: '.hero-slider',
                 slideBy: 'page',
@@ -114,7 +114,7 @@
                 controls: true,
                 controlsText: ['<i class="lni lni-chevron-left"></i>', '<i class="lni lni-chevron-right"></i>'],
             });
-    
+
             //======== Brand Slider
             tns({
                 container: '.brands-logo-carousel',
